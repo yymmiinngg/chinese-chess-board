@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:ChineseChess.xcodeproj">
+      location = "self:/Users/yaoming/apple/ios/chinese-chess-board/ChineseChess.xcodeproj">
    </FileRef>
 </Workspace>

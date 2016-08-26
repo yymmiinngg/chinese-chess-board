@@ -9,8 +9,6 @@
 import Foundation
 import UIKit
 
-
-
 class ChessPoint: UIView {
     
     private var cgPoint:CGPoint!
@@ -33,10 +31,10 @@ class ChessPoint: UIView {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-		if chessLogic.ended {
-			board.setPointFocus(self, stable: false)
-		} else if board.PickedChessPoint != nil {
-			board.setPointFocus(self, stable: false)
+		if chessLogic.isEnded {
+			board.showPointFocus(self, stable: false)
+		} else if board.pickedChessPoint != nil {
+			board.showPointFocus(self, stable: false)
 		}
     }
 	
@@ -45,44 +43,43 @@ class ChessPoint: UIView {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if chessLogic.ended {
-			board.setPointFocus(self, stable: false)
+        if chessLogic.isEnded {
+			board.showPointFocus(self, stable: false)
             return
         }
 		
-        if board.PickedChessPoint == nil {
-            if self.BindChessView != nil && chessLogic.isBlackGo == self.BindChessView!.chess.isBlack {
+        if board.pickedChessPoint == nil {
+            if self.BindChessView != nil && chessLogic.nextColor == self.BindChessView!.chess.color {
                 board.pickChessPoint(self, stable: true)
-				board.clearAwkward()
+				board.clearChessAwkward()
             }
         }else{
 			
-            let srcPoint = board.PickedChessPoint!
+            let srcPoint = board.pickedChessPoint!
             let toPoint = self
             
             let result = chessLogic.moveChess(srcPoint.index, to:toPoint.index)
             if case MoveMessage.FailSameColor = result {
                 board.pickChessPoint(self, stable: true)
-				board.clearAwkward()
+				board.clearChessAwkward()
 			} else {
                 
                 if case MoveMessage.FailCanNotReach = result {
-					board.showAwkward(srcPoint)
+					board.showChessAwkward(srcPoint)
 				} else {
-					board.moveChessByPoint(srcPoint, to: toPoint)
-					board.doMoveMessage(result, isFromBack: false)
+					board.moveChessView(srcPoint, to: toPoint, moveMessage: result, isFromBack: false)
+					board.afterMoveChessView()
 				}
 				
-                board.dropPickedChessPoint()
+                board.droppickedChessPoint()
             }
         }
     }
 	
-    func doInit( ){
-        let x = self.cgPoint.x - board.PointWidth / 2
-        let y = self.cgPoint.y - board.PointWidth / 2
-		// print ("x:\(x), y:\(y)")
-		self.frame = CGRect(x:x, y:y, width: board.PointWidth, height: board.PointWidth)
+    func doInit(){
+        let x = self.cgPoint.x - board.pointWidth / 2
+        let y = self.cgPoint.y - board.pointWidth / 2
+		self.frame = CGRect(x:x, y:y, width: board.pointWidth, height: board.pointWidth)
     }
     
 }

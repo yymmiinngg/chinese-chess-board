@@ -12,7 +12,7 @@
 		3D2F8CD51D66CBC600B2E734 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F8CD31D66CBC600B2E734 /* Main.storyboard */; };
 		3D2F8CD71D66CBC600B2E734 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F8CD61D66CBC600B2E734 /* Assets.xcassets */; };
 		3D2F8CDA1D66CBC600B2E734 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F8CD81D66CBC600B2E734 /* LaunchScreen.storyboard */; };
-		3D2F8CE21D66CCC500B2E734 /* ChessBoardUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F8CE11D66CCC500B2E734 /* ChessBoardUIView.swift */; };
+		3D2F8CE21D66CCC500B2E734 /* ChessBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F8CE11D66CCC500B2E734 /* ChessBoard.swift */; };
 		3D3E41811D6EB84B009B34E5 /* ChessTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E41801D6EB84B009B34E5 /* ChessTag.swift */; };
 		3D751B5A1D6D34E90040FC7D /* KilledPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D751B591D6D34E90040FC7D /* KilledPanel.swift */; };
 		3D751B5C1D6D3E360040FC7D /* Statics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D751B5B1D6D3E360040FC7D /* Statics.swift */; };
@@ -31,7 +31,7 @@
 		3D2F8CD61D66CBC600B2E734 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D2F8CD91D66CBC600B2E734 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3D2F8CDB1D66CBC600B2E734 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3D2F8CE11D66CCC500B2E734 /* ChessBoardUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChessBoardUIView.swift; sourceTree = "<group>"; };
+		3D2F8CE11D66CCC500B2E734 /* ChessBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChessBoard.swift; sourceTree = "<group>"; };
 		3D3E41801D6EB84B009B34E5 /* ChessTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChessTag.swift; sourceTree = "<group>"; };
 		3D751B591D6D34E90040FC7D /* KilledPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KilledPanel.swift; sourceTree = "<group>"; };
 		3D751B5B1D6D3E360040FC7D /* Statics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statics.swift; sourceTree = "<group>"; };
@@ -80,7 +80,7 @@
 				3D2F8CD61D66CBC600B2E734 /* Assets.xcassets */,
 				3D2F8CD81D66CBC600B2E734 /* LaunchScreen.storyboard */,
 				3D2F8CDB1D66CBC600B2E734 /* Info.plist */,
-				3D2F8CE11D66CCC500B2E734 /* ChessBoardUIView.swift */,
+				3D2F8CE11D66CCC500B2E734 /* ChessBoard.swift */,
 				3D94C7961D674D5600745CEB /* ChessView.swift */,
 				3D3E41801D6EB84B009B34E5 /* ChessTag.swift */,
 				3DF8238B1D6854580092221E /* ChessPoint.swift */,
@@ -184,7 +184,7 @@
 				3D751B5C1D6D3E360040FC7D /* Statics.swift in Sources */,
 				3D3E41811D6EB84B009B34E5 /* ChessTag.swift in Sources */,
 				3DF8238C1D6854580092221E /* ChessPoint.swift in Sources */,
-				3D2F8CE21D66CCC500B2E734 /* ChessBoardUIView.swift in Sources */,
+				3D2F8CE21D66CCC500B2E734 /* ChessBoard.swift in Sources */,
 				3DCFD9031D6C4CFB0050217B /* Extension.swift in Sources */,
 				3D2F8CD21D66CBC600B2E734 /* ViewController.swift in Sources */,
 				3D2F8CD01D66CBC600B2E734 /* AppDelegate.swift in Sources */,
@@ -252,7 +252,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -291,7 +291,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;

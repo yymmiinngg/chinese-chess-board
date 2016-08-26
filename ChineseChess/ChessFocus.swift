@@ -13,13 +13,15 @@ class ChessFocus: UIView {
   
     private let point:CGPoint
 	private let color:UIColor
-	
+	private var basewidth:CGFloat!
+
 	required init(point:CGPoint, color:UIColor){
 		self.point = point
 		self.color = color
 		super.init(frame:CGRectZero)
 		self.backgroundColor = UIColor.clearColor()
-        self.frame = CGRectMake(point.x - board.PointWidth / 2 - 3, point.y - board.PointWidth / 2 - 3, board.PointWidth + 6, board.PointWidth + 6)
+		self.basewidth = board.pointWidth / 35
+        self.frame = CGRectMake(point.x - board.pointWidth / 2 - basewidth, point.y - board.pointWidth / 2 - basewidth, board.pointWidth + 2 * basewidth, board.pointWidth + 2 * basewidth)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,16 +29,15 @@ class ChessFocus: UIView {
     }
     
     override func drawRect(rect: CGRect){
-        let basewidth:CGFloat = rect.width / 40
-        let dotteShapLayer = CAShapeLayer()
+		let dotteShapLayer = CAShapeLayer()
         let mdotteShapePath = CGPathCreateMutable()
         dotteShapLayer.fillColor = UIColor.clearColor().CGColor
         dotteShapLayer.strokeColor = self.color.CGColor
         dotteShapLayer.lineWidth = basewidth
         CGPathAddEllipseInRect(mdotteShapePath, nil, CGRectMake(basewidth,basewidth,rect.width - 2 * basewidth , rect.height - 2 * basewidth))
         dotteShapLayer.path = mdotteShapePath
-        let arr :NSArray = NSArray(array: [10,5])
-        dotteShapLayer.lineDashPhase = 1.0
+        let arr :NSArray = NSArray(array: [10, 5])
+        dotteShapLayer.lineDashPhase = 1
         dotteShapLayer.lineDashPattern = arr as? [NSNumber]
         self.layer.addSublayer(dotteShapLayer)
     }

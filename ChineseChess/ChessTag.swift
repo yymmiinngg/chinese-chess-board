@@ -25,8 +25,9 @@ class ChessTag: UIView {
 		case .Awkward:
 			let w = frame.width
 			let h = frame.height
-
+			CGContextSetStrokeColorWithColor(context, color_chess_tag_awkward.CGColor)
 			CGContextSetLineWidth(context, w / 40) //设置画笔宽度
+			
 			CGContextMoveToPoint(context, w / 10 * 6, h / 10 * 0);
 			CGContextAddLineToPoint(context, w / 10 * 6, h / 10 * 5);
 			
@@ -43,9 +44,9 @@ class ChessTag: UIView {
 		case .Lose:
 			CGContextSetLineWidth(context, 1) //设置画笔宽度
 			CGContextSetStrokeColorWithColor(context, color_chess_shadow.CGColor)
-			CGContextSetFillColorWithColor(context, UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.4).CGColor)
-			CGContextFillEllipseInRect(context, CGRectMake(1,1,rect.width - 2 , rect.height - 2 ))
-			CGContextAddEllipseInRect(context, CGRectMake(1,1,rect.width - 2, rect.height - 2 )); //画圆
+			CGContextSetFillColorWithColor(context, color_chess_tag_lose.CGColor)
+			CGContextFillEllipseInRect(context, CGRectMake(1, 1,rect.width - 2, rect.height - 2 ))
+			CGContextAddEllipseInRect(context, CGRectMake(1, 1,rect.width - 2, rect.height - 2 )); //画圆
 			CGContextStrokePath(context) //关闭路径
 		case .Win:
 			self.addSubview(label("WIN"));
@@ -55,8 +56,8 @@ class ChessTag: UIView {
 	private func label(text:String) -> UILabel{
 		let label:UILabel!
 		let p:CGPoint = CGPointMake(self.frame.width / 2, 0)
-		label = UILabel(frame:CGRect(origin: p, size:CGSize(width: self.frame.width / 2 , height: self.frame.height / 4)))
-		label.textColor = UIColor.redColor()
+		label = UILabel(frame:CGRect(origin: p, size:CGSize(width: self.frame.width / 2, height: self.frame.height / 4)))
+		label.textColor = color_chess_tag_win
 		label.backgroundColor = UIColor.clearColor()
 		label.text = text
 		label.textAlignment = NSTextAlignment.Right
