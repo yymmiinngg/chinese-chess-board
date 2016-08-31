@@ -31,6 +31,7 @@ class ChessPoint: UIView {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+		print ("ChessPoint.touchesBegan, chessLogic.isEnded = \(chessLogic.isEnded)")
 		if chessLogic.isEnded {
 			board.showPointFocus(self, stable: false)
 		} else if board.pickedChessPoint != nil {
@@ -43,7 +44,8 @@ class ChessPoint: UIView {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if chessLogic.isEnded {
+		print ("ChessPoint.touchesEnded, chessLogic.isEnded = \(chessLogic.isEnded)")
+		if chessLogic.isEnded {
 			board.showPointFocus(self, stable: false)
             return
         }

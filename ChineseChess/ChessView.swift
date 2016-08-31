@@ -103,4 +103,8 @@ class ChessView: UIView {
 		self.frame = CGRect(x:x, y:y, width: width, height: width)
 	}
 	
+	override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+		print ("ChessView.touchesEnded, chessLogic.isEnded = \(chessLogic.isEnded)")
+	}
+
 }

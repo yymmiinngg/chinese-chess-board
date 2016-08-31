@@ -10,14 +10,17 @@ import Foundation
 import UIKit
 
 
+var lastColor:UIColor?
 extension UIView {
-    /// 为所有视图添加点击事件
+	
+	/// 为所有视图添加点击事件
     func addOnClickListener(target: AnyObject, action: Selector) {
         let gr = UITapGestureRecognizer(target: target, action: action)
         gr.numberOfTapsRequired = 1
         userInteractionEnabled = true
         addGestureRecognizer(gr)
     }
+	
 	/// 获得上级ViewController对象
 	/// - parameter none
 	/// - returns: nil表示没有上级ViewController
@@ -31,7 +34,19 @@ extension UIView {
         }
         return nil
     }
-    
+	
+//    override public func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+//		print("touchesBegan in: \(event?.classForCoder)")
+//		lastColor = self.backgroundColor
+//		self.backgroundColor = UIColor.brownColor()
+//	}
+//	
+//	
+//	override public func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+//		print ("touchesEnded in: \(event?.classForCoder)")
+//		self.backgroundColor = lastColor
+//	}
+	
 }
 
 extension UIColor {
