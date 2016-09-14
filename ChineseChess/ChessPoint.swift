@@ -10,19 +10,19 @@ import Foundation
 import UIKit
 
 class ChessPoint: UIView {
-    
-    private var cgPoint:CGPoint!
-	var Point:CGPoint { return self.cgPoint }
+	
+    private var _point:CGPoint! // 位置点
+	var Point:CGPoint { return self._point }
 	var BindChessView:ChessView?
 	
-	var x:CGFloat { return cgPoint.x }
-	var y:CGFloat { return cgPoint.y }
-    private let index:Int
+	var x:CGFloat { return _point.x } // 位置X坐标
+	var y:CGFloat { return _point.y } // 位置Y坐标
+    private let index:Int // 点所在的索引（0～89，共90个位置）
 	
     required init(x:CGFloat, y:CGFloat, index:Int){
 		self.index = index
         super.init(frame:CGRectZero)
-        cgPoint=CGPoint(x:x, y:y)
+        _point = CGPoint(x:x, y:y)
         self.backgroundColor = UIColor.clearColor()
     }
     
@@ -42,45 +42,57 @@ class ChessPoint: UIView {
     override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
 
     }
-    
+	
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
 		print ("ChessPoint.touchesEnded, chessLogic.isEnded = \(chessLogic.isEnded)")
+		
+		// 是否已经结束战局
 		if chessLogic.isEnded {
 			board.showPointFocus(self, stable: false)
             return
         }
 		
+		// 没有拾起的棋子
         if board.pickedChessPoint == nil {
             if self.BindChessView != nil && chessLogic.nextColor == self.BindChessView!.chess.color {
                 board.pickChessPoint(self, stable: true)
 				board.clearChessAwkward()
             }
-        }else{
+        }
+		// 有拾起的棋子
+		else{
 			
             let srcPoint = board.pickedChessPoint!
             let toPoint = self
-            
+			
+			// 逻辑移动棋子
             let result = chessLogic.moveChess(srcPoint.index, to:toPoint.index)
-            if case MoveMessage.FailSameColor = result {
+			if case MoveMessage.FailSameColor = result {
+				// 意图吃同色棋子
                 board.pickChessPoint(self, stable: true)
 				board.clearChessAwkward()
-			} else {
-                
+			}
+			else {
+                // 意图走违规棋
                 if case MoveMessage.FailCanNotReach = result {
 					board.showChessAwkward(srcPoint)
 				} else {
+					// 实际移动棋子
 					board.moveChessView(srcPoint, to: toPoint, moveMessage: result, isFromBack: false)
 					board.afterMoveChessView()
 				}
-				
+				// 移除拾起棋子的点
                 board.droppickedChessPoint()
             }
         }
     }
 	
+	/// 初始化棋点
+	/// - parameter none
+	/// - returns: void
     func doInit(){
-        let x = self.cgPoint.x - board.pointWidth / 2
-        let y = self.cgPoint.y - board.pointWidth / 2
+        let x = self._point.x - board.pointWidth / 2
+        let y = self._point.y - board.pointWidth / 2
 		self.frame = CGRect(x:x, y:y, width: board.pointWidth, height: board.pointWidth)
     }
     

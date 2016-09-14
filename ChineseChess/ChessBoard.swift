@@ -1,5 +1,5 @@
 //
-//  ChessBoardUIView.swift
+//  ChessBoard.swift
 //  ChineseChess
 //
 //  Created by 姚明 on 16/8/19.

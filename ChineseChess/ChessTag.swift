@@ -1,5 +1,5 @@
 //
-//  ChessAwkward.swift
+//  ChessTag.swift
 //  ChineseChess
 //
 //  Created by 姚明 on 16/8/25.
@@ -15,14 +15,14 @@ enum TagType {
 
 class ChessTag: UIView {
 	
-	private var tagType:TagType?
+	private var tagType:TagType? // 标志类型
 	
 	override func drawRect(rect: CGRect){
 		let context:CGContextRef? =  UIGraphicsGetCurrentContext();//获取画笔上下文
 		CGContextSetAllowsAntialiasing(context!, true) //抗锯齿设置
 		
 		switch tagType! {
-		case .Awkward:
+		case .Awkward: // 尴尬的标志
 			let w = frame.width
 			let h = frame.height
 			CGContextSetStrokeColorWithColor(context, color_chess_tag_awkward.CGColor)
@@ -41,18 +41,21 @@ class ChessTag: UIView {
 			CGContextAddLineToPoint(context, w / 10 * 9, h / 10 * 5);
 			
 			CGContextStrokePath(context)
-		case .Lose:
+		case .Lose: // 失败的标志
 			CGContextSetLineWidth(context, 1) //设置画笔宽度
 			CGContextSetStrokeColorWithColor(context, color_chess_shadow.CGColor)
 			CGContextSetFillColorWithColor(context, color_chess_tag_lose.CGColor)
 			CGContextFillEllipseInRect(context, CGRectMake(1, 1,rect.width - 2, rect.height - 2 ))
 			CGContextAddEllipseInRect(context, CGRectMake(1, 1,rect.width - 2, rect.height - 2 )); //画圆
 			CGContextStrokePath(context) //关闭路径
-		case .Win:
+		case .Win: // 成功的标志
 			self.addSubview(label("WIN"));
 		}
 	}
 	
+	/// 生成文字视图
+	/// - parameter text 文字
+	/// - returns: UILabel
 	private func label(text:String) -> UILabel{
 		let label:UILabel!
 		let p:CGPoint = CGPointMake(self.frame.width / 2, 0)
@@ -66,6 +69,9 @@ class ChessTag: UIView {
 		return label
 	}
 	
+	/// 初始化
+	/// - parameter chessView 象棋视图（附着在哪个视图）
+	/// - returns: void
 	func doInit(chessView:ChessView, tagType:TagType) {
 		let width = chessView.frame.width
 		self.tagType = tagType;

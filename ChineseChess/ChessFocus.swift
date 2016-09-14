@@ -9,11 +9,12 @@
 import Foundation
 import UIKit
 
+/// 棋子的焦点视图
 class ChessFocus: UIView {
   
-    private let point:CGPoint
-	private let color:UIColor
-	private var basewidth:CGFloat!
+    private let point:CGPoint // 所在棋点
+	private let color:UIColor // 颜色
+	private var basewidth:CGFloat! // 基本宽度（线条）
 
 	required init(point:CGPoint, color:UIColor){
 		self.point = point

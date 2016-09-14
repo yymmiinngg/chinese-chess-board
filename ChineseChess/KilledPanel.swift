@@ -1,5 +1,5 @@
 //
-//  CtrlPanel.swift
+//  KilledPanel.swift
 //  ChineseChess
 //
 //  Created by 姚明 on 16/8/24.
@@ -12,8 +12,8 @@ import UIKit
 
 class KilledPanel: UIView {
 	
-	var chessPanel = UIView(frame:CGRectZero)
-    var killedChessList = [Chess]()
+	var chessPanel = UIView(frame:CGRectZero) // 死子面板
+    var killedChessList = [Chess]() // 死子列表
 	
     init(){
         super.init(frame:CGRectZero)
@@ -42,7 +42,10 @@ class KilledPanel: UIView {
 		path.fill()
 		path.stroke()
 	}
-    
+	
+	/// 增加一个死棋子
+	/// - parameter chess 死棋子
+	/// - returns: void
     func add(chess:Chess){
         killedChessList.append(chess)
         let chessView = ChessView(chess: chess)
@@ -65,6 +68,9 @@ class KilledPanel: UIView {
 		refreshView()
 	}
 	
+	/// 重绘死棋子的位置（永远居中）
+	/// - parameter none
+	/// - returns: void
 	private func refreshView() {
 		let margin = chessPanel.frame.height / 10
 		
@@ -76,7 +82,10 @@ class KilledPanel: UIView {
 		self.chessPanel.frame = CGRect(origin: CGPoint(x:(frame.width - chessPanelSize.width) / 2, y:(frame.height - self.chessPanel.frame.size.height) / 2), size: chessPanelSize)
 	}
 	
-	func remove(){
+	/// 从死棋子面板中移除一个死子（一般由于回退导致）
+	/// - parameter none
+	/// - returns: void
+	func remove() {
 		viewWithTag(killedChessList.count)?.removeFromSuperview()
 		killedChessList.removeLast()
 		refreshView()
