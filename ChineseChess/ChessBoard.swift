@@ -11,22 +11,22 @@ import UIKit
 
 class ChessBoard : UIView{
 	
-	private var _points = [ChessPoint]()
+	fileprivate var _points = [ChessPoint]()
 	
-	private var _marginX:CGFloat! // 横向的边距
-	private var _marginY:CGFloat! // 纵向的边距
-	private var _pointWidth:CGFloat! // 每个棋点的宽度
+	fileprivate var _marginX:CGFloat! // 横向的边距
+	fileprivate var _marginY:CGFloat! // 纵向的边距
+	fileprivate var _pointWidth:CGFloat! // 每个棋点的宽度
 	
-	private var _perWidth:CGFloat! // 每列的宽度
-	private var _perHeight:CGFloat! // 每行宽度
+	fileprivate var _perWidth:CGFloat! // 每列的宽度
+	fileprivate var _perHeight:CGFloat! // 每行宽度
 	
-	private var _bindChessViewList = [ChessView]()
+	fileprivate var _bindChessViewList = [ChessView]()
 	
-	private var _focus:ChessFocus? // 焦点
-	private var _pickedChessPoint:ChessPoint? // 举棋点
-	private var _awkwardChess:ChessView? // 最后的尴尬棋子
+	fileprivate var _focus:ChessFocus? // 焦点
+	fileprivate var _pickedChessPoint:ChessPoint? // 举棋点
+	fileprivate var _awkwardChess:ChessView? // 最后的尴尬棋子
 	
-	private var _hasShowEnding = false // 是否显示了结局
+	fileprivate var _hasShowEnding = false // 是否显示了结局
 	
 	var pickedChessPoint:ChessPoint? { return self._pickedChessPoint }
 	var pointWidth:CGFloat { return _pointWidth }
@@ -42,9 +42,9 @@ class ChessBoard : UIView{
 		initChessViews()
 	}
 	
-	override func drawRect(rect: CGRect){
-		let context:CGContextRef? = UIGraphicsGetCurrentContext();//获取画笔上下文
-		CGContextSetAllowsAntialiasing(context!, true) //抗锯齿设置
+	override func draw(_ rect: CGRect){
+		let context:CGContext? = UIGraphicsGetCurrentContext();//获取画笔上下文
+		context!.setAllowsAntialiasing(true) //抗锯齿设置
 		
 		_marginX = 16
 		_perWidth = (rect.width - _marginX * 2) / 9
@@ -63,8 +63,8 @@ class ChessBoard : UIView{
 		}
 		
 		// 绘制边框
-		let rectangle = CGRectMake(0, 0, frame.width, frame.height);
-		let pathRect = CGRectInset(rectangle, 4, 0)
+		let rectangle = CGRect(x: 0, y: 0, width: frame.width, height: frame.height);
+		let pathRect = rectangle.insetBy(dx: 4, dy: 0)
 		let path = UIBezierPath(roundedRect: pathRect, cornerRadius: 8)
 		path.lineWidth = 1
 		bgcolor_board.setFill()
@@ -75,6 +75,10 @@ class ChessBoard : UIView{
 		drawBoardLine(context, 2, color_board_line_shadow)
 		drawBoardLine(context, 1, color_board_line)
 		drawBoder(context, 3, color_board_line)
+		drawLabel(1, color:color_board_label)
+		drawLabel(2, color:color_board_label)
+		drawLabel(3, color:color_board_label)
+		drawLabel(4, color:color_board_label)
 		
 		for i in 0..<_points.count {
 			let p = _points[i]
@@ -91,7 +95,7 @@ class ChessBoard : UIView{
 	/// - parameter chessPoint 要拾起的棋子
 	/// - parameter stable 稳定的拾起
 	/// - returns: void
-	func pickChessPoint(chessPoint:ChessPoint!, stable: Bool) {
+	func pickChessPoint(_ chessPoint:ChessPoint!, stable: Bool) {
 		self._pickedChessPoint = chessPoint
 		self.showPointFocus(self._pickedChessPoint!, stable: stable)
 	}
@@ -130,17 +134,17 @@ class ChessBoard : UIView{
 	/// 将所有棋点置入前端(确保棋点可以被用户点击到)
 	/// - parameter none
 	/// - returns: void
-	private func bringChessPointToFront(){
+	fileprivate func bringChessPointToFront(){
 		for i in 0..<_points.count {
 			let p = _points[i]
-			self.bringSubviewToFront(p)
+			self.bringSubview(toFront: p)
 		}
 	}
 	
 	/// 在历史步骤中后退一步棋
 	/// - parameter step 步骤信息
 	/// - returns: void
-	func doBackwardChessStep(step: ChessStep){
+	func doBackwardChessStep(_ step: ChessStep){
 		let srcPoint = _points[step.to]
 		let toPoint = _points[step.src]
 		moveChessView(srcPoint, to: toPoint, moveMessage:step.moveMessage, isFromBack:true)
@@ -152,7 +156,7 @@ class ChessBoard : UIView{
 	/// 在历史步骤中前进一步棋
 	/// - parameter step 步骤信息
 	/// - returns: void
-	func doForwardChessStep(step: ChessStep){
+	func doForwardChessStep(_ step: ChessStep){
 		let srcPoint = _points[step.src]
 		let toPoint = _points[step.to]
 		moveChessView(srcPoint, to: toPoint, moveMessage:step.moveMessage, isFromBack:false)
@@ -195,7 +199,7 @@ class ChessBoard : UIView{
 	/// - parameter moveMesssage 移动发生的消息
 	/// - parameter srcPoint 是否来源于后退操作
 	/// - returns: void
-	func moveChessView(srcPoint:ChessPoint, to toPoint:ChessPoint, moveMessage: MoveMessage, isFromBack: Bool){
+	func moveChessView(_ srcPoint:ChessPoint, to toPoint:ChessPoint, moveMessage: MoveMessage, isFromBack: Bool){
 		// 如果目的点存在棋子则移除
 		if toPoint.BindChessView != nil {
 			toPoint.BindChessView!.removeFromSuperview()
@@ -203,13 +207,13 @@ class ChessBoard : UIView{
 		
 		// 将起始点棋子移动到目的点
 		toPoint.BindChessView = srcPoint.BindChessView
-		UIView.animateWithDuration(0.15, animations: { () -> Void in
+		UIView.animate(withDuration: 0.15, animations: { () -> Void in
 			toPoint.BindChessView!.drawView(toPoint.Point, width: board._pointWidth!)
 		})
 		srcPoint.BindChessView = nil
 		
 		// 处理杀棋列表
-		if case let MoveMessage.Success(killedChess) = moveMessage {
+		if case let MoveMessage.success(killedChess) = moveMessage {
 			if let kc = killedChess {
 				 // 回退操作将棋子从杀棋列表移除
 				if(isFromBack) {
@@ -234,14 +238,14 @@ class ChessBoard : UIView{
 	/// 显示结局消息
 	/// - parameter winnerColor 胜出者颜色
 	/// - returns: void
-	func showEndingTag(winnerColor:Bool){
+	func showEndingTag(_ winnerColor:Bool){
 		for i in 0..<_points.count {
 			if let chess = _points[i].BindChessView?.chess {
 				if chess.color == winnerColor {
-					// _points[i].BindChessView!.showTag(TagType.Win)
+					_points[i].BindChessView!.showTag(TagType.win)
 				}
 				else{
-					_points[i].BindChessView!.showTag(TagType.Lose)
+					_points[i].BindChessView!.showTag(TagType.lose)
 				}
 			}
 		}
@@ -262,10 +266,10 @@ class ChessBoard : UIView{
 	/// 指定棋子显示尴尬
 	/// - parameter chessPoint 棋点
 	/// - returns: void
-	func showChessAwkward(chessPoint:ChessPoint){
+	func showChessAwkward(_ chessPoint:ChessPoint){
 		clearChessAwkward()
 		_awkwardChess = chessPoint.BindChessView!
-		_awkwardChess!.showTag(TagType.Awkward)
+		_awkwardChess!.showTag(TagType.awkward)
 	}
 	
 	/// 清除显示棋子尴尬
@@ -282,17 +286,17 @@ class ChessBoard : UIView{
 	/// - parameter black 黑将军是否显示
 	/// - parameter red 红将军是否显示
 	/// - returns: void
-	private func showJiangJunAwkward(black black:Bool, red:Bool){
+	fileprivate func showJiangJunAwkward(black:Bool, red:Bool){
 		if black {
 			if let jiang = chessLogic.getJiangPoint(true) {
 				let p = _points[jiang]
-				p.BindChessView!.showTag(TagType.Awkward)
+				p.BindChessView!.showTag(TagType.awkward)
 			}
 		}
 		if(red){
 			if let jiang = chessLogic.getJiangPoint(false) {
 				let p = _points[jiang]
-				p.BindChessView!.showTag(TagType.Awkward)
+				p.BindChessView!.showTag(TagType.awkward)
 			}
 		}
 	}
@@ -300,7 +304,7 @@ class ChessBoard : UIView{
 	/// 清除将军的尴尬
 	/// - parameter none
 	/// - returns: void
-	private func clearJiangJunAwkward(){
+	fileprivate func clearJiangJunAwkward(){
 		if  let blackJiang = chessLogic.getJiangPoint(true) {
 			if let blackPoint = _points[blackJiang].BindChessView {
 				blackPoint.hideTag()
@@ -317,7 +321,7 @@ class ChessBoard : UIView{
 	/// - parameter point 棋点
 	/// - parameter stable 突出焦点
 	/// - returns: void
-	func showPointFocus(point:ChessPoint, stable:Bool){
+	func showPointFocus(_ point:ChessPoint, stable:Bool){
 		if _focus != nil {
 			_focus!.removeFromSuperview()
 		}
@@ -334,7 +338,7 @@ class ChessBoard : UIView{
 	/// 移除棋点的焦点
 	/// - parameter none
 	/// - returns: void
-	private func clearChessFocus(){
+	fileprivate func clearChessFocus(){
 		if _focus != nil {
 			_focus!.removeFromSuperview()
 		}
@@ -344,7 +348,7 @@ class ChessBoard : UIView{
 	/// - parameter chess 棋子角色
 	/// - parameter to 到哪个点
 	/// - returns: void
-	private func addChess(chess:Chess, to chessPoint:ChessPoint){
+	fileprivate func addChess(_ chess:Chess, to chessPoint:ChessPoint){
 		let BindChessView = ChessView(chess:chess)
 		chessPoint.BindChessView = BindChessView
 		self.addSubview(chessPoint.BindChessView!)
@@ -355,24 +359,24 @@ class ChessBoard : UIView{
 	/// 画棋盘线
 	/// - parameter none
 	/// - returns: void
-	private func drawBoardLine(context:CGContextRef?, _ width:CGFloat, _ color:UIColor){
+	fileprivate func drawBoardLine(_ context:CGContext?, _ width:CGFloat, _ color:UIColor){
 		
-		CGContextSetLineWidth(context, width) //设置画笔宽度
-		CGContextSetStrokeColorWithColor(context, color.CGColor)
+		context?.setLineWidth(width) //设置画笔宽度
+		context?.setStrokeColor(color.cgColor)
 		
-		for var i = 0; i < 10 ; i += 1{
+		for i in 0 ..< 10 {
 			let p1 = _points[i*9]
 			let p2 = _points[i*9+8]
 			line(p1.Point, p2.Point )
 		}
 		
-		for var i = 0; i < 9 ; i += 1{
+		for i in 0 ..< 9 {
 			let p1 = _points[i]
 			let p2 = _points[i + 36]
 			line(p1.Point ,p2.Point)
 		}
 		
-		for var i = 0; i < 9 ; i += 1{
+		for i in 0 ..< 9 {
 			let p1 = _points[i + 45]
 			let p2 = _points[i + 81]
 			line(p1.Point ,p2.Point)
@@ -421,18 +425,18 @@ class ChessBoard : UIView{
 	/// 画棋盘边框
 	/// - parameter none
 	/// - returns: void
-	private func drawBoder (context:CGContextRef?, _ width:CGFloat, _ color:UIColor){
-		CGContextSetLineWidth(context, width) //设置画笔宽度
-		CGContextSetStrokeColorWithColor(context, color.CGColor)
+	fileprivate func drawBoder (_ context:CGContext?, _ width:CGFloat, _ color:UIColor){
+		context?.setLineWidth(width) //设置画笔宽度
+		context?.setStrokeColor(color.cgColor)
 		let pa = CGPoint( x: _points[0].Point.x - width*2, y: _points[0].Point.y - width*2)
 		let pb = CGPoint( x: _points[8].Point.x + width*2, y: _points[8].Point.y - width*2)
 		let pc = CGPoint( x: _points[89].Point.x + width*2, y: _points[89].Point.y + width*2)
 		
-		let rectangle = CGRectMake(pa.x, pa.y, pb.x - pa.x, pc.y - pb.y);
-		let pathRect = CGRectInset(rectangle, 0, 0)
+		let rectangle = CGRect(x: pa.x, y: pa.y, width: pb.x - pa.x, height: pc.y - pb.y);
+		let pathRect = rectangle.insetBy(dx: 0, dy: 0)
 		let path = UIBezierPath(roundedRect: pathRect, cornerRadius: 0)
 		path.lineWidth = width
-		UIColor.clearColor().setFill()
+		UIColor.clear.setFill()
 		color.setStroke()
 		path.fill()
 		path.stroke()
@@ -441,7 +445,7 @@ class ChessBoard : UIView{
 	/// 画棋盘锚点
 	/// - parameter none
 	/// - returns: void
-	private func drawAnchor(p:ChessPoint,_ o:Int){
+	fileprivate func drawAnchor(_ p:ChessPoint,_ o:Int){
 		let margins:CGFloat = _perWidth / 16
 		let marginl:CGFloat = _perWidth / 6
 		
@@ -478,16 +482,62 @@ class ChessBoard : UIView{
 		}
 	}
 	
+	/// 画象棋河界标签
+	/// - parameter index 文字位置
+	/// - parameter color 文字颜色
+	/// - returns: void
+	fileprivate func drawLabel(_ index:Int, color:UIColor) {
+		let size = CGSize(width: self._pointWidth! * 0.6, height: self._pointWidth! * 0.6)
+		// 象棋文字
+		var revert:Bool!
+		var p:CGPoint!
+		var text:String!
+		switch index {
+		case 1:
+			p = CGPoint(x: self.frame.size.width / 2 - self.frame.size.width / 4 - size.width, y: self.frame.size.height / 2 - size.height / 2)
+			text = "楚"
+			revert = false
+		case 2:
+			p = CGPoint(x: self.frame.size.width / 2 - self.frame.size.width / 4 + size.width, y: self.frame.size.height / 2 - size.height / 2)
+			text = "河"
+			revert = false
+		case 3:
+			p = CGPoint(x: self.frame.size.width / 2 + self.frame.size.width / 4 , y: self.frame.size.height / 2 - size.height / 2)
+			text = "漢"
+			revert = true
+		case 4:
+			p = CGPoint(x: self.frame.size.width / 2 + self.frame.size.width / 4 - size.width * 2, y: self.frame.size.height / 2 - size.height / 2)
+			text = "界"
+			revert = true
+		default:
+			break
+		}
+		let label:UILabel!
+		label = UILabel(frame:CGRect(origin: p, size:size))
+		label.textColor = color
+		label.backgroundColor = UIColor.clear
+		label.text = text
+		label.textAlignment = NSTextAlignment.center
+		label.adjustsFontSizeToFitWidth = true
+		label.font = UIFont.systemFont(ofSize: size.width )
+		
+		// 象棋旋转角度
+		if revert! {
+		    label.transform = CGAffineTransform(rotationAngle: 180 * CGFloat(M_PI)/CGFloat(180));
+		}
+		self.addSubview(label)
+	}
+	
 	/// 在棋盘上画线
 	/// - parameter p1 起始点
 	/// - parameter p2 结束点
 	/// - returns: <#void#>
-	private func line(p1:CGPoint, _ p2:CGPoint){
-		let context:CGContextRef? =  UIGraphicsGetCurrentContext();//获取画笔上下文
+	fileprivate func line(_ p1:CGPoint, _ p2:CGPoint){
+		let context:CGContext? =  UIGraphicsGetCurrentContext();//获取画笔上下文
 		//画直线
-		CGContextMoveToPoint(context,  p1.x , p1.y);
-		CGContextAddLineToPoint(context, p2.x, p2.y);
-		CGContextStrokePath(context)
+		context?.move(to: CGPoint(x: p1.x, y: p1.y));
+		context?.addLine(to: CGPoint(x: p2.x, y: p2.y));
+		context?.strokePath()
 	}
 	
 }
