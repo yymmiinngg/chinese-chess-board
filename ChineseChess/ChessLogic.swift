@@ -253,10 +253,10 @@ class ChessLogic {
 	/// - parameter none
 	/// - returns: nil表示将已经被杀
 	func getJiangPoint(_ color:Bool) -> Int? {
-		var mayto = [3,4,5,12,13,14,21,22,23]
+		let mayto = [3,4,5,12,13,14,21,22,23]
 		for i in 0..<mayto.count{
 			let p = mayto[i] + (color ? 0 : 63)
-			if case Chess.jiang(_)? = _chesses[p]  {
+			if case Chess.jiang(_,_)? = _chesses[p]  {
 				if color == _chesses[p]?.color {
 					return p
 				}
@@ -297,7 +297,7 @@ class ChessLogic {
 	/// - returns: 是否移动成功
 	fileprivate func moveJiang(_ src:Int, to:Int, color:Bool) -> Bool {
 		if _chesses[to] != nil {
-			if case Chess.jiang(_) = _chesses[to]! {
+			if case Chess.jiang(_,_) = _chesses[to]! {
 				let count = countOfObstacle(src, to)
 				if count == 0 {
 					return true

@@ -31,18 +31,41 @@ class ChessBoard : UIView{
 	var pickedChessPoint:ChessPoint? { return self._pickedChessPoint }
 	var pointWidth:CGFloat { return _pointWidth }
 	
+	fileprivate var inited: Bool = false
+	
+	
+	
 	/// 初始化方法，在棋盘需要初始化的时候调用：将所有棋子归位，并抹去所有提示信息
 	/// - parameter none
 	/// - returns: void
 	func doInit(){
+		
+		// 如果初始化过了就不重复初始化了
+		if inited {
+			return
+		}
+		
 		droppickedChessPoint()
 		clearChessFocus()
 		clearChessAwkward()
 		clearEndingTag()
 		initChessViews()
+		
+		// 初始化棋点
+		for i in 0..<_points.count {
+			let p = _points[i]
+			// 画棋点编号
+			// let str:String = String(i)
+			// str.draw(at: CGPoint(x: p.Point.x + 10, y: p.Point.y + 10), withAttributes: nil);
+			p.doInit()
+			self.addSubview(p)
+		}
+		
+		inited = true
 	}
 	
 	override func draw(_ rect: CGRect){
+		
 		let context:CGContext? = UIGraphicsGetCurrentContext();//获取画笔上下文
 		context!.setAllowsAntialiasing(true) //抗锯齿设置
 		
@@ -53,12 +76,16 @@ class ChessBoard : UIView{
 		
 		_pointWidth = _perWidth - _perWidth / 20
 		
-		for j in 0..<10 {
-			for i in 0..<9 {
-				let x = _perWidth * CGFloat(i) + (_perWidth / 2) + _marginX
-				let y = _perHeight * CGFloat(j) + (_perHeight / 2) + _marginY
-				let p = ChessPoint(x:x, y:y, index: _points.count)
-				_points.append(p)
+		// 如果初始化过了就不重复初始化了
+		if !inited {
+			_points.removeAll()
+			for j in 0..<10 {
+				for i in 0..<9 {
+					let x = _perWidth * CGFloat(i) + (_perWidth / 2) + _marginX
+					let y = _perHeight * CGFloat(j) + (_perHeight / 2) + _marginY
+					let p = ChessPoint(x:x, y:y, index: _points.count)
+					_points.append(p)
+				}
 			}
 		}
 		
@@ -72,6 +99,7 @@ class ChessBoard : UIView{
 		path.fill()
 		path.stroke()
 
+		// 画棋盘线
 		drawBoardLine(context, 2, color_board_line_shadow)
 		drawBoardLine(context, 1, color_board_line)
 		drawBoder(context, 3, color_board_line)
@@ -79,14 +107,6 @@ class ChessBoard : UIView{
 		drawLabel(2, color:color_board_label)
 		drawLabel(3, color:color_board_label)
 		drawLabel(4, color:color_board_label)
-		
-		for i in 0..<_points.count {
-			let p = _points[i]
-			// let str:String = String(i)
-			// str.drawAtPoint(CGPoint(x: p.Point.x + 10, y: p.Point!.y + 10), withAttributes: nil);
-			p.doInit()
-			self.addSubview(p)
-		}
 		
 		doInit()
 	}
@@ -137,7 +157,7 @@ class ChessBoard : UIView{
 	fileprivate func bringChessPointToFront(){
 		for i in 0..<_points.count {
 			let p = _points[i]
-			self.bringSubview(toFront: p)
+			self.bringSubviewToFront(p)
 		}
 	}
 	
@@ -523,7 +543,7 @@ class ChessBoard : UIView{
 		
 		// 象棋旋转角度
 		if revert! {
-		    label.transform = CGAffineTransform(rotationAngle: 180 * CGFloat(M_PI)/CGFloat(180));
+		    label.transform = CGAffineTransform(rotationAngle: 180 * CGFloat(Double.pi)/CGFloat(180));
 		}
 		self.addSubview(label)
 	}

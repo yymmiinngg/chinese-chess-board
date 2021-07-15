@@ -46,7 +46,7 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 		redKilledPanel.frame = CGRect(x: 0, y:  killPanelHeight + boardHeight, width: width , height: killPanelHeight)
 		
 		// 黑棋死子面板需要转换角度（因为对手是在对面）
-		blackKilledPanel.transform = CGAffineTransform(rotationAngle: 180 * CGFloat(M_PI)/CGFloat(180));
+		blackKilledPanel.transform = CGAffineTransform(rotationAngle: 180 * CGFloat(Double.pi)/CGFloat(180));
 	}
 	
 	/// 注册手势：回退，前进
@@ -60,7 +60,7 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 		redKilledPanel.addGestureRecognizer(redSwipeGesture)
 		//左划
 		let redSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
-		redSwipeLeftGesture.direction = UISwipeGestureRecognizerDirection.left //不设置是右
+		redSwipeLeftGesture.direction = UISwipeGestureRecognizer.Direction.left //不设置是右
 		redSwipeLeftGesture.numberOfTouchesRequired = 1
 		redKilledPanel.addGestureRecognizer(redSwipeLeftGesture)
 		//黑棋死子面板
@@ -70,7 +70,7 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 		blackKilledPanel.addGestureRecognizer(blackSwipeGesture)
 		//左划
 		let blackSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
-		blackSwipeLeftGesture.direction = UISwipeGestureRecognizerDirection.left //不设置是右
+		blackSwipeLeftGesture.direction = UISwipeGestureRecognizer.Direction.left //不设置是右
 		blackSwipeLeftGesture.numberOfTouchesRequired = 1
 		blackKilledPanel.addGestureRecognizer(blackSwipeLeftGesture)
 	}
@@ -86,7 +86,7 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 		redKilledPanel.addGestureRecognizer(redSwipeGesture)
 		//左划
 		let redSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
-		redSwipeLeftGesture.direction = UISwipeGestureRecognizerDirection.left //不设置是右
+		redSwipeLeftGesture.direction = UISwipeGestureRecognizer.Direction.left //不设置是右
 		redSwipeLeftGesture.numberOfTouchesRequired = 2
 		redKilledPanel.addGestureRecognizer(redSwipeLeftGesture)
 		//黑棋死子面板
@@ -96,18 +96,18 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 		blackKilledPanel.addGestureRecognizer(blackSwipeGesture)
 		//左划
 		let blackSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
-		blackSwipeLeftGesture.direction = UISwipeGestureRecognizerDirection.left //不设置是右
+		blackSwipeLeftGesture.direction = UISwipeGestureRecognizer.Direction.left //不设置是右
 		blackSwipeLeftGesture.numberOfTouchesRequired = 2
 		blackKilledPanel.addGestureRecognizer(blackSwipeLeftGesture)
 	}
 	
 	/// 划动手势
-	func handleSwipeGesture(_ sender: UISwipeGestureRecognizer){
+	@objc func handleSwipeGesture(_ sender: UISwipeGestureRecognizer){
 		//划动的方向
 		let direction = sender.direction
 		//判断是上下左右
 		switch (direction){
-		case UISwipeGestureRecognizerDirection.left:
+		case UISwipeGestureRecognizer.Direction.left:
 			if sender.numberOfTouches == 1 {
 				if let chessStep = chessLogic.backward() {
 					board.doBackwardChessStep(chessStep)
@@ -118,7 +118,7 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 				}
 			}
 			board.afterMoveChessView()
-		case UISwipeGestureRecognizerDirection.right:
+		case UISwipeGestureRecognizer.Direction.right:
 			if sender.numberOfTouches == 1 {
 				if let chessStep = chessLogic.forward() {
 					board.doForwardChessStep(chessStep)

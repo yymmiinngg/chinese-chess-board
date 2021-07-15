@@ -57,12 +57,24 @@ extension UIColor {
 	/// - returns: nil表示转换失败
 	public static func hexToColor(_ hex: String, alpha: CGFloat = 1) -> UIColor {
         var cString: String = hex.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        
-        if cString.characters.count < 6 { fatalError("Unknow hex color code: " + hex) }
-        if cString.hasPrefix("0X") {cString = cString.substring(from: cString.characters.index(cString.startIndex, offsetBy: 2))}
-		if cString.hasPrefix("0x") {cString = cString.substring(from: cString.characters.index(cString.startIndex, offsetBy: 2))}
-        if cString.hasPrefix("#") {cString = cString.substring(from: cString.characters.index(cString.startIndex, offsetBy: 1))}
-        if cString.characters.count != 6 { fatalError("Unknow hex color code: " + hex) }
+		if cString.count < 6 { fatalError("Unknow hex color code: " + hex) }
+		
+		if cString.hasPrefix("0X") {
+			let s = cString.index(cString.startIndex, offsetBy: 2)
+			let e = cString.index(cString.startIndex, offsetBy: cString.count)
+			cString = String(cString[s...e])
+		}
+		if cString.hasPrefix("0x") {
+			let s = cString.index(cString.startIndex, offsetBy: 2)
+			let e = cString.index(cString.startIndex, offsetBy: cString.count)
+			cString = String(cString[s...e])
+		}
+        if cString.hasPrefix("#") {
+			let s = cString.index(cString.startIndex, offsetBy: 1)
+			let e = cString.index(cString.startIndex, offsetBy: cString.count)
+			cString = String(cString[s...e])
+		}
+        if cString.count != 6 { fatalError("Unknow hex color code: " + hex) }
         
         var range: NSRange = NSMakeRange(0, 2)
 		

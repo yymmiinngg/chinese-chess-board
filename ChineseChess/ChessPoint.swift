@@ -31,7 +31,6 @@ class ChessPoint: UIView {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		// print ("ChessPoint.touchesBegan, chessLogic.isEnded = \(chessLogic.isEnded)")
 		if chessLogic.isEnded {
 			board.showPointFocus(self, stable: false)
 		} else if board.pickedChessPoint != nil {
@@ -44,13 +43,13 @@ class ChessPoint: UIView {
     }
 	
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-		// print ("ChessPoint.touchesEnded, chessLogic.isEnded = \(chessLogic.isEnded)")
+		
 		// 是否已经结束战局
 		if chessLogic.isEnded {
 			board.showPointFocus(self, stable: false)
             return
         }
-		
+
 		// 没有拾起的棋子
         if board.pickedChessPoint == nil {
             if self.BindChessView != nil && chessLogic.nextColor == self.BindChessView!.chess.color {

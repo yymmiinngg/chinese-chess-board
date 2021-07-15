@@ -72,7 +72,7 @@ class ChessView: UIView {
 		if reverse {
 			angle += 180
 		}
-		label.transform = CGAffineTransform(rotationAngle: angle * CGFloat(M_PI)/CGFloat(180));
+		label.transform = CGAffineTransform(rotationAngle: angle * CGFloat(Double.pi)/CGFloat(180));
 		
 		self.addSubview(label);
 	}
@@ -88,7 +88,7 @@ class ChessView: UIView {
 		// 标志颜色
 		chessTag!.backgroundColor = UIColor.clear
 		if chess.color {
-			chessTag!.transform = CGAffineTransform(rotationAngle: 180 * CGFloat(M_PI)/CGFloat(180));
+			chessTag!.transform = CGAffineTransform(rotationAngle: 180 * CGFloat(Double.pi)/CGFloat(180));
 		}
 		addSubview(chessTag!)
 		// 标志初始化
