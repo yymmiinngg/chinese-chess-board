@@ -12,12 +12,12 @@ import UIKit
 
 class KilledPanel: UIView {
 	
-	var chessPanel = UIView(frame:CGRectZero) // 死子面板
+	var chessPanel = UIView(frame:CGRect.zero) // 死子面板
     var killedChessList = [Chess]() // 死子列表
 	
     init(){
-        super.init(frame:CGRectZero)
-        self.backgroundColor = UIColor.clearColor()
+        super.init(frame:CGRect.zero)
+        self.backgroundColor = UIColor.clear
 		self.addSubview(chessPanel)
     }
 
@@ -25,16 +25,16 @@ class KilledPanel: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func drawRect(rect: CGRect){
+    override func draw(_ rect: CGRect){
         self.chessPanel.frame.size = CGSize(width: frame.width, height: frame.width / 8)
 		if self.chessPanel.frame.size.height > frame.height {
 			self.chessPanel.frame.size = CGSize(width: frame.width, height: frame.height)
 		}
-		self.chessPanel.backgroundColor = UIColor.clearColor()
+		self.chessPanel.backgroundColor = UIColor.clear
 		
 		// 绘制边框
-		let rectangle = CGRectMake(0, 0, frame.width, frame.height);
-		let pathRect = CGRectInset(rectangle, 4, 4)
+		let rectangle = CGRect(x: 0, y: 0, width: frame.width, height: frame.height);
+		let pathRect = rectangle.insetBy(dx: 4, dy: 4)
 		let path = UIBezierPath(roundedRect: pathRect, cornerRadius: 8)
 		path.lineWidth = 1
 		bgcolor_killedPanel.setFill()
@@ -46,7 +46,7 @@ class KilledPanel: UIView {
 	/// 增加一个死棋子
 	/// - parameter chess 死棋子
 	/// - returns: void
-    func add(chess:Chess){
+    func add(_ chess:Chess){
         killedChessList.append(chess)
         let chessView = ChessView(chess: chess)
 		chessView.tag = killedChessList.count
@@ -71,7 +71,7 @@ class KilledPanel: UIView {
 	/// 重绘死棋子的位置（永远居中）
 	/// - parameter none
 	/// - returns: void
-	private func refreshView() {
+	fileprivate func refreshView() {
 		let margin = chessPanel.frame.height / 10
 		
 		let height = chessPanel.frame.height - 2 * margin

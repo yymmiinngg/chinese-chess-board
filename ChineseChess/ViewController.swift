@@ -18,9 +18,9 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 //		blackKilledPanel.backgroundColor = bgcolor_blackKilledPanel
 //		redKilledPanel.backgroundColor = bgcolor_redKilledPanel
 		
-		board.backgroundColor = UIColor.clearColor()
-		blackKilledPanel.backgroundColor = UIColor.clearColor()
-		redKilledPanel.backgroundColor = UIColor.clearColor()
+		board.backgroundColor = UIColor.clear
+		blackKilledPanel.backgroundColor = UIColor.clear
+		redKilledPanel.backgroundColor = UIColor.clear
  		view.backgroundColor = bgcolor
 		
 		// 将各种面板加入到场景
@@ -46,31 +46,31 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 		redKilledPanel.frame = CGRect(x: 0, y:  killPanelHeight + boardHeight, width: width , height: killPanelHeight)
 		
 		// 黑棋死子面板需要转换角度（因为对手是在对面）
-		blackKilledPanel.transform = CGAffineTransformMakeRotation(180 * CGFloat(M_PI)/CGFloat(180));
+		blackKilledPanel.transform = CGAffineTransform(rotationAngle: 180 * CGFloat(Double.pi)/CGFloat(180));
 	}
 	
 	/// 注册手势：回退，前进
 	/// - parameter none
 	/// - returns: void
-	private func registBackAndGo() {
+	fileprivate func registBackAndGo() {
 		//红棋死子面板
 		//右划
-		let redSwipeGesture = UISwipeGestureRecognizer(target: self, action: "handleSwipeGesture:")
+		let redSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
 		redSwipeGesture.numberOfTouchesRequired = 1
 		redKilledPanel.addGestureRecognizer(redSwipeGesture)
 		//左划
-		let redSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: "handleSwipeGesture:")
-		redSwipeLeftGesture.direction = UISwipeGestureRecognizerDirection.Left //不设置是右
+		let redSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
+		redSwipeLeftGesture.direction = UISwipeGestureRecognizer.Direction.left //不设置是右
 		redSwipeLeftGesture.numberOfTouchesRequired = 1
 		redKilledPanel.addGestureRecognizer(redSwipeLeftGesture)
 		//黑棋死子面板
 		//右划
-		let blackSwipeGesture = UISwipeGestureRecognizer(target: self, action: "handleSwipeGesture:")
+		let blackSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
 		blackSwipeGesture.numberOfTouchesRequired = 1
 		blackKilledPanel.addGestureRecognizer(blackSwipeGesture)
 		//左划
-		let blackSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: "handleSwipeGesture:")
-		blackSwipeLeftGesture.direction = UISwipeGestureRecognizerDirection.Left //不设置是右
+		let blackSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
+		blackSwipeLeftGesture.direction = UISwipeGestureRecognizer.Direction.left //不设置是右
 		blackSwipeLeftGesture.numberOfTouchesRequired = 1
 		blackKilledPanel.addGestureRecognizer(blackSwipeLeftGesture)
 	}
@@ -78,52 +78,52 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 	/// 注册手势：回退，前进 到边界
 	/// - parameter <#none#>
 	/// - returns: <#void#>
-	private func registBackAndGo2Bound() {
+	fileprivate func registBackAndGo2Bound() {
 		//红棋死子面板
 		//右划
-		let redSwipeGesture = UISwipeGestureRecognizer(target: self, action: "handleSwipeGesture:")
+		let redSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
 		redSwipeGesture.numberOfTouchesRequired = 2
 		redKilledPanel.addGestureRecognizer(redSwipeGesture)
 		//左划
-		let redSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: "handleSwipeGesture:")
-		redSwipeLeftGesture.direction = UISwipeGestureRecognizerDirection.Left //不设置是右
+		let redSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
+		redSwipeLeftGesture.direction = UISwipeGestureRecognizer.Direction.left //不设置是右
 		redSwipeLeftGesture.numberOfTouchesRequired = 2
 		redKilledPanel.addGestureRecognizer(redSwipeLeftGesture)
 		//黑棋死子面板
 		//右划
-		let blackSwipeGesture = UISwipeGestureRecognizer(target: self, action: "handleSwipeGesture:")
+		let blackSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
 		blackSwipeGesture.numberOfTouchesRequired = 2
 		blackKilledPanel.addGestureRecognizer(blackSwipeGesture)
 		//左划
-		let blackSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: "handleSwipeGesture:")
-		blackSwipeLeftGesture.direction = UISwipeGestureRecognizerDirection.Left //不设置是右
+		let blackSwipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.handleSwipeGesture(_:)))
+		blackSwipeLeftGesture.direction = UISwipeGestureRecognizer.Direction.left //不设置是右
 		blackSwipeLeftGesture.numberOfTouchesRequired = 2
 		blackKilledPanel.addGestureRecognizer(blackSwipeLeftGesture)
 	}
 	
 	/// 划动手势
-	func handleSwipeGesture(sender: UISwipeGestureRecognizer){
+	@objc func handleSwipeGesture(_ sender: UISwipeGestureRecognizer){
 		//划动的方向
 		let direction = sender.direction
 		//判断是上下左右
 		switch (direction){
-		case UISwipeGestureRecognizerDirection.Left:
-			if sender.numberOfTouches() == 1 {
+		case UISwipeGestureRecognizer.Direction.left:
+			if sender.numberOfTouches == 1 {
 				if let chessStep = chessLogic.backward() {
 					board.doBackwardChessStep(chessStep)
 				}
-			} else if sender.numberOfTouches() == 2 {
+			} else if sender.numberOfTouches == 2 {
 				while let chessStep = chessLogic.backward() {
 					board.doBackwardChessStep(chessStep)
 				}
 			}
 			board.afterMoveChessView()
-		case UISwipeGestureRecognizerDirection.Right:
-			if sender.numberOfTouches() == 1 {
+		case UISwipeGestureRecognizer.Direction.right:
+			if sender.numberOfTouches == 1 {
 				if let chessStep = chessLogic.forward() {
 					board.doForwardChessStep(chessStep)
 				}
-			} else if sender.numberOfTouches() == 2 {
+			} else if sender.numberOfTouches == 2 {
 				while let chessStep = chessLogic.forward() {
 					board.doForwardChessStep(chessStep)
 				}
@@ -139,12 +139,12 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 	}
 	
 	// 不转屏
-	override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-		return UIInterfaceOrientationMask.Portrait
+	override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+		return UIInterfaceOrientationMask.portrait
 	}
 	
 	// 不显示信号栏
-	override func prefersStatusBarHidden()->Bool{
+	override var prefersStatusBarHidden:Bool{
 		return true
 	}
 	

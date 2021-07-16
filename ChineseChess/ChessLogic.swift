@@ -9,34 +9,34 @@
 import Foundation
 
 enum MoveMessage{
-	case FailSrcEmpty // 源点为空
-	case FailToIsSrc // 落点与源点一至
-	case FailSameColor // 相同颜色的棋子
-	case FailCanNotReach // 不可到达位置
-	case Success(Chess?) // 成功(被杀的棋子)
+	case failSrcEmpty // 源点为空
+	case failToIsSrc // 落点与源点一至
+	case failSameColor // 相同颜色的棋子
+	case failCanNotReach // 不可到达位置
+	case success(Chess?) // 成功(被杀的棋子)
 }
 
 /// 棋子角色
 enum Chess  {
 	
-	case Bin(String,Bool),Pao(String,Bool),Che(String,Bool),Ma(String,Bool),Xiang(String,Bool),Shi(String,Bool),Jiang(String,Bool)
+	case bin(String,Bool),pao(String,Bool),che(String,Bool),ma(String,Bool),xiang(String,Bool),shi(String,Bool),jiang(String,Bool)
 	
 	/// 棋子的颜色：true黑色，false红色
 	var color : Bool{
 		switch self {
-		case Bin(_, let _color):
+		case .bin(_, let _color):
 			return _color
-		case Pao(_, let _color):
+		case .pao(_, let _color):
 			return _color
-		case Che(_, let _color):
+		case .che(_, let _color):
 			return _color
-		case Ma(_, let _color):
+		case .ma(_, let _color):
 			return _color
-		case Xiang(_, let _color):
+		case .xiang(_, let _color):
 			return _color
-		case Shi(_, let _color):
+		case .shi(_, let _color):
 			return _color
-		case Jiang(_, let _color):
+		case .jiang(_, let _color):
 			return _color
 		}
 	}
@@ -44,19 +44,19 @@ enum Chess  {
 	/// 棋子名称
 	var name : String{
 		switch self {
-		case Bin(let name, _):
+		case .bin(let name, _):
 			return name
-		case Pao(let name, _):
+		case .pao(let name, _):
 			return name
-		case Che(let name, _):
+		case .che(let name, _):
 			return name
-		case Ma(let name, _):
+		case .ma(let name, _):
 			return name
-		case Xiang(let name, _):
+		case .xiang(let name, _):
 			return name
-		case Shi(let name, _):
+		case .shi(let name, _):
 			return name
-		case Jiang(let name, _):
+		case .jiang(let name, _):
 			return name
 		}
 	}
@@ -76,19 +76,19 @@ struct ChessStep {
 class ChessLogic {
 	
 	// 棋子列表
-	private var _chesses = [Chess?](count: 90, repeatedValue: nil)
+	fileprivate var _chesses = [Chess?](repeating: nil, count: 90)
 	var chesses:[Chess?] { return _chesses }
 	
-	private var _chessStepList = [ChessStep]() // 步骤列表
-	private var _killedChesses = [Chess]() // 杀棋列表
-	private var _backCount = 0 // 回退步骤数
+	fileprivate var _chessStepList = [ChessStep]() // 步骤列表
+	fileprivate var _killedChesses = [Chess]() // 杀棋列表
+	fileprivate var _backCount = 0 // 回退步骤数
 	
 	// 下一次行棋的颜色
-	private var _nextColor = false
+	fileprivate var _nextColor = false
 	var nextColor:Bool { return _nextColor }
 	
 	// 是否已经结束
-	private var _isEnded = false
+	fileprivate var _isEnded = false
 	var isEnded:Bool { return _isEnded }
 	
 	/// 悔棋后退
@@ -123,7 +123,7 @@ class ChessLogic {
 			_chesses[chessStep.src] = nil
 			if chessStep.toChess != nil {
 				_killedChesses.append(chessStep.toChess!)
-				if case Chess.Jiang(_, _) = chessStep.toChess! {
+				if case Chess.jiang(_, _) = chessStep.toChess! {
 					_isEnded = true
 				}
 			}
@@ -137,25 +137,25 @@ class ChessLogic {
 	/// - parameter src 从哪点出发
 	/// - parameter to 去到哪点
 	/// - returns: MoveMessage 移动是否成功，是否吃子
-	func moveChess (src:Int, to:Int) -> MoveMessage {
+	func moveChess (_ src:Int, to:Int) -> MoveMessage {
 		let srcColor = _chesses[src]?.color
 		let toColor = _chesses[to]?.color
 		// 起点为空
 		if _chesses[src] == nil {
-			return  MoveMessage.FailSrcEmpty
+			return  MoveMessage.failSrcEmpty
 		}
 		// 起点与终点一致
 		if src == to {
-			return  MoveMessage.FailToIsSrc
+			return  MoveMessage.failToIsSrc
 		}
 		// 起点与终点颜色一样
 		if srcColor == toColor {
-			return  MoveMessage.FailSameColor
+			return  MoveMessage.failSameColor
 		}
 		// 试着移动
 		if !tryMove(src, to:to) {
 			// 不可达到
-			return  MoveMessage.FailCanNotReach
+			return  MoveMessage.failCanNotReach
 		}
 		
 		// 一旦行棋成功则需要将回退过的行棋步骤清除
@@ -175,12 +175,12 @@ class ChessLogic {
 		_chesses[src] = nil
 		
 		// 行棋消息为成功
-		let moveMessage = MoveMessage.Success(toChess)
+		let moveMessage = MoveMessage.success(toChess)
 		
 		// 行棋步骤中增加一步成功的行棋
 		_chessStepList.append(ChessStep(src: src, srcChess: srcChess, to: to, toChess: toChess, moveMessage:moveMessage))
 		if toChess != nil {
-			if case Chess.Jiang(_, _) = toChess! {
+			if case Chess.jiang(_, _) = toChess! {
 				_isEnded = true
 			}
 			_killedChesses.append(toChess!)
@@ -243,7 +243,7 @@ class ChessLogic {
 	/// 获得将棋角色
 	/// - parameter 要获得的将棋颜色
 	/// - returns: nil表示被杀
-	func getJiang(color:Bool) -> Chess? {
+	func getJiang(_ color:Bool) -> Chess? {
 		let i = getJiangPoint(color)
 		if nil == i {return nil}
 		return _chesses[i!]
@@ -252,11 +252,11 @@ class ChessLogic {
 	/// 获得将棋所在棋点
 	/// - parameter none
 	/// - returns: nil表示将已经被杀
-	func getJiangPoint(color:Bool) -> Int? {
-		var mayto = [3,4,5,12,13,14,21,22,23]
+	func getJiangPoint(_ color:Bool) -> Int? {
+		let mayto = [3,4,5,12,13,14,21,22,23]
 		for i in 0..<mayto.count{
 			let p = mayto[i] + (color ? 0 : 63)
-			if case Chess.Jiang(_)? = _chesses[p]  {
+			if case Chess.jiang(_,_)? = _chesses[p]  {
 				if color == _chesses[p]?.color {
 					return p
 				}
@@ -269,23 +269,23 @@ class ChessLogic {
 	/// - parameter src 出发点
 	/// - parameter to 目的点
 	/// - returns: 是否成功
-	private func tryMove(src:Int, to:Int) -> Bool {
+	fileprivate func tryMove(_ src:Int, to:Int) -> Bool {
 		var result:Bool = false
 		let color = _chesses[src]!.color
 		switch _chesses[src]! {
-		case Chess.Bin:
+		case Chess.bin:
 			result = self.moveBin(src, to:to, color: color)
-		case Chess.Pao:
+		case Chess.pao:
 			result = self.movePao(src, to:to, color: color)
-		case Chess.Che:
+		case Chess.che:
 			result = self.moveChe(src, to:to, color: color)
-		case Chess.Ma:
+		case Chess.ma:
 			result = self.moveMa(src, to:to, color: color)
-		case Chess.Xiang:
+		case Chess.xiang:
 			result = self.moveXiang(src, to:to, color: color)
-		case Chess.Shi:
+		case Chess.shi:
 			result = self.moveShi(src, to:to, color: color)
-		case Chess.Jiang:
+		case Chess.jiang:
 			result = self.moveJiang(src, to:to, color: color)
 		}
 		return result
@@ -295,9 +295,9 @@ class ChessLogic {
 	/// - parameter src 出发点
 	/// - parameter to 目的点
 	/// - returns: 是否移动成功
-	private func moveJiang(src:Int, to:Int, color:Bool) -> Bool {
+	fileprivate func moveJiang(_ src:Int, to:Int, color:Bool) -> Bool {
 		if _chesses[to] != nil {
-			if case Chess.Jiang(_) = _chesses[to]! {
+			if case Chess.jiang(_,_) = _chesses[to]! {
 				let count = countOfObstacle(src, to)
 				if count == 0 {
 					return true
@@ -320,7 +320,7 @@ class ChessLogic {
 	/// - parameter src 出发点
 	/// - parameter to 目的点
 	/// - returns: 是否移动成功
-	private func moveShi(src:Int, to:Int, color:Bool) -> Bool {
+	fileprivate func moveShi(_ src:Int, to:Int, color:Bool) -> Bool {
 		var m = 13
 		var abcd = [3,5,21,23]
 		if(to > 45) {
@@ -336,7 +336,7 @@ class ChessLogic {
 	/// - parameter src 出发点
 	/// - parameter to 目的点
 	/// - returns: 是否移动成功
-	private func moveXiang(src:Int, to:Int, color:Bool) -> Bool{
+	fileprivate func moveXiang(_ src:Int, to:Int, color:Bool) -> Bool{
 		var rs:[(Int,Int)] = []
 		rs.append((src - 18 - 2, src - 9 - 1))
 		rs.append((src - 18 + 2, src - 9 + 1))
@@ -358,7 +358,7 @@ class ChessLogic {
 	/// - parameter src 出发点
 	/// - parameter to 目的点
 	/// - returns: 是否移动成功
-	private func moveMa(src:Int, to:Int, color:Bool) -> Bool{
+	fileprivate func moveMa(_ src:Int, to:Int, color:Bool) -> Bool{
 		var rs:[(Int,Int)] = []
 		rs.append((src - 18 - 1, src - 9))
 		rs.append((src - 18 + 1, src - 9))
@@ -385,7 +385,7 @@ class ChessLogic {
 	/// - parameter src 出发点
 	/// - parameter to 目的点
 	/// - returns: 是否移动成功
-	private func moveChe(src:Int, to:Int, color:Bool) -> Bool{
+	fileprivate func moveChe(_ src:Int, to:Int, color:Bool) -> Bool{
 		let count = countOfObstacle(src, to)
 		if count != 0 {
 			return false
@@ -397,7 +397,7 @@ class ChessLogic {
 	/// - parameter src 出发点
 	/// - parameter to 目的点
 	/// - returns: 是否移动成功
-	private func movePao(src:Int, to:Int, color:Bool) -> Bool{
+	fileprivate func movePao(_ src:Int, to:Int, color:Bool) -> Bool{
 		let count = countOfObstacle(src, to)
 		if _chesses[to] == nil && count != 0 {
 			return false
@@ -412,7 +412,8 @@ class ChessLogic {
 	/// - parameter src 出发点
 	/// - parameter to 目的点
 	/// - returns: 是否移动成功
-	private func moveBin(var src:Int, var to:Int, color:Bool) -> Bool{
+	private func moveBin(_ src:Int, to:Int, color:Bool) -> Bool{
+		var src = src, to = to
 		if !color{
 			src = 90 - src
 			to = 90 - to
@@ -433,18 +434,19 @@ class ChessLogic {
 	/// - parameter src 出发点
 	/// - parameter to 目的点
 	/// - returns: nil表示两点不是水平或垂直相连的
-	private func countOfObstacle(p1:Int, _ p2:Int) -> Int {
+	fileprivate func countOfObstacle(_ p1:Int, _ p2:Int) -> Int {
 		let horizontal = Int(p1 / 9) == Int(p2 / 9) // 水平移动
 		let vertical = abs(p1 - p2) % 9 == 0 // 垂直移动
 		if !horizontal && !vertical {
 			return -1
 		}
 		var count = 0
-		let a = p1 < p2 ? p1 : p2
-		let b = p1 < p2 ? p2 : p1
-		let step = (horizontal ? 1 : 9)
+		var step = (horizontal ? 1 : 9)
+		if p1 > p2 {
+			step = -step
+		}
 		// 计算障碍数量
-		for var i = a + step; i < b ; i += step {
+		for i in stride(from: p1 + step, through: p2 - step, by: step) {
 			if _chesses[i] != nil {
 				count += 1
 			}
@@ -454,7 +456,7 @@ class ChessLogic {
 	
 	func doInit(){
 		_chesses.removeAll()
-		_chesses = [Chess?](count: 90, repeatedValue: nil)
+		_chesses = [Chess?](repeating: nil, count: 90)
 		_chessStepList.removeAll()
 		_killedChesses.removeAll()
 		_backCount = 0
@@ -462,43 +464,43 @@ class ChessLogic {
 		_nextColor = false
 		_isEnded = false
 		
-		_chesses[0] =  Chess.Che("車", true)
-		_chesses[1] = Chess.Ma("馬",true)
-		_chesses[2] = Chess.Xiang("象",true)
-		_chesses[3] = Chess.Shi("士",true)
-		_chesses[4] = Chess.Jiang("將",true)
-		_chesses[5] = Chess.Shi("士",true)
-		_chesses[6] = Chess.Xiang("象",true)
-		_chesses[7] = Chess.Ma("馬",true)
-		_chesses[8] = Chess.Che("車",true)
+		_chesses[0] =  Chess.che("車", true)
+		_chesses[1] = Chess.ma("馬",true)
+		_chesses[2] = Chess.xiang("象",true)
+		_chesses[3] = Chess.shi("士",true)
+		_chesses[4] = Chess.jiang("將",true)
+		_chesses[5] = Chess.shi("士",true)
+		_chesses[6] = Chess.xiang("象",true)
+		_chesses[7] = Chess.ma("馬",true)
+		_chesses[8] = Chess.che("車",true)
 		
-		_chesses[19] = Chess.Pao("炮",true)
-		_chesses[25] = Chess.Pao("炮",true)
+		_chesses[19] = Chess.pao("炮",true)
+		_chesses[25] = Chess.pao("炮",true)
 		
-		_chesses[27] = Chess.Bin("卒",true)
-		_chesses[29] = Chess.Bin("卒",true)
-		_chesses[31] = Chess.Bin("卒",true)
-		_chesses[33] = Chess.Bin("卒",true)
-		_chesses[35] = Chess.Bin("卒",true)
+		_chesses[27] = Chess.bin("卒",true)
+		_chesses[29] = Chess.bin("卒",true)
+		_chesses[31] = Chess.bin("卒",true)
+		_chesses[33] = Chess.bin("卒",true)
+		_chesses[35] = Chess.bin("卒",true)
 		
-		_chesses[54] = Chess.Bin("兵",false)
-		_chesses[56] = Chess.Bin("兵",false)
-		_chesses[58] = Chess.Bin("兵",false)
-		_chesses[60] = Chess.Bin("兵",false)
-		_chesses[62] = Chess.Bin("兵",false)
+		_chesses[54] = Chess.bin("兵",false)
+		_chesses[56] = Chess.bin("兵",false)
+		_chesses[58] = Chess.bin("兵",false)
+		_chesses[60] = Chess.bin("兵",false)
+		_chesses[62] = Chess.bin("兵",false)
 		
-		_chesses[64] = Chess.Pao("砲",false)
-		_chesses[70] =  Chess.Pao("砲",false)
+		_chesses[64] = Chess.pao("砲",false)
+		_chesses[70] =  Chess.pao("砲",false)
 		
-		_chesses[81] = Chess.Che("車",false)
-		_chesses[82] = Chess.Ma("馬",false)
-		_chesses[83] = Chess.Xiang("相",false)
-		_chesses[84] = Chess.Shi("仕",false)
-		_chesses[85] = Chess.Jiang("帥",false)
-		_chesses[86] = Chess.Shi("仕",false)
-		_chesses[87] = Chess.Xiang("相",false)
-		_chesses[88] = Chess.Ma("馬",false)
-		_chesses[89] = Chess.Che("車",false)
+		_chesses[81] = Chess.che("車",false)
+		_chesses[82] = Chess.ma("馬",false)
+		_chesses[83] = Chess.xiang("相",false)
+		_chesses[84] = Chess.shi("仕",false)
+		_chesses[85] = Chess.jiang("帥",false)
+		_chesses[86] = Chess.shi("仕",false)
+		_chesses[87] = Chess.xiang("相",false)
+		_chesses[88] = Chess.ma("馬",false)
+		_chesses[89] = Chess.che("車",false)
 	}
 	
 	

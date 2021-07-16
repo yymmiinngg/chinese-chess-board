@@ -14,10 +14,10 @@ var lastColor:UIColor?
 extension UIView {
 	
 	/// 为所有视图添加点击事件
-    func addOnClickListener(target: AnyObject, action: Selector) {
+    func addOnClickListener(_ target: AnyObject, action: Selector) {
         let gr = UITapGestureRecognizer(target: target, action: action)
         gr.numberOfTapsRequired = 1
-        userInteractionEnabled = true
+        isUserInteractionEnabled = true
         addGestureRecognizer(gr)
     }
 	
@@ -27,7 +27,7 @@ extension UIView {
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self
         while parentResponder != nil {
-            parentResponder = parentResponder!.nextResponder()
+            parentResponder = parentResponder!.next
             if let viewController = parentResponder as? UIViewController {
                 return viewController
             }
@@ -55,30 +55,42 @@ extension UIColor {
 	/// - parameter hex 16进制
 	/// - parameter alpha 透明度
 	/// - returns: nil表示转换失败
-	public static func hexToColor(hex: String, alpha: CGFloat = 1) -> UIColor {
-        var cString: String = hex.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        
-        if cString.characters.count < 6 { fatalError("Unknow hex color code: " + hex) }
-        if cString.hasPrefix("0X") {cString = cString.substringFromIndex(cString.startIndex.advancedBy(2))}
-		if cString.hasPrefix("0x") {cString = cString.substringFromIndex(cString.startIndex.advancedBy(2))}
-        if cString.hasPrefix("#") {cString = cString.substringFromIndex(cString.startIndex.advancedBy(1))}
-        if cString.characters.count != 6 { fatalError("Unknow hex color code: " + hex) }
+	public static func hexToColor(_ hex: String, alpha: CGFloat = 1) -> UIColor {
+        var cString: String = hex.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+		if cString.count < 6 { fatalError("Unknow hex color code: " + hex) }
+		
+		if cString.hasPrefix("0X") {
+			let s = cString.index(cString.startIndex, offsetBy: 2)
+			let e = cString.index(cString.startIndex, offsetBy: cString.count)
+			cString = String(cString[s...e])
+		}
+		if cString.hasPrefix("0x") {
+			let s = cString.index(cString.startIndex, offsetBy: 2)
+			let e = cString.index(cString.startIndex, offsetBy: cString.count)
+			cString = String(cString[s...e])
+		}
+        if cString.hasPrefix("#") {
+			let s = cString.index(cString.startIndex, offsetBy: 1)
+			let e = cString.index(cString.startIndex, offsetBy: cString.count)
+			cString = String(cString[s...e])
+		}
+        if cString.count != 6 { fatalError("Unknow hex color code: " + hex) }
         
         var range: NSRange = NSMakeRange(0, 2)
 		
-        let rString = (cString as NSString).substringWithRange(range)
+        let rString = (cString as NSString).substring(with: range)
         range.location = 2
-        let gString = (cString as NSString).substringWithRange(range)
+        let gString = (cString as NSString).substring(with: range)
         range.location = 4
-        let bString = (cString as NSString).substringWithRange(range)
+        let bString = (cString as NSString).substring(with: range)
         
         var r: UInt32 = 0x0
         var g: UInt32 = 0x0
         var b: UInt32 = 0x0
 		
-        NSScanner.init(string: rString).scanHexInt(&r)
-        NSScanner.init(string: gString).scanHexInt(&g)
-        NSScanner.init(string: bString).scanHexInt(&b)
+        Scanner.init(string: rString).scanHexInt32(&r)
+        Scanner.init(string: gString).scanHexInt32(&g)
+        Scanner.init(string: bString).scanHexInt32(&b)
         
         return UIColor(red: CGFloat(r)/255.0, green: CGFloat(g)/255.0, blue: CGFloat(b)/255.0, alpha: alpha)
     }
