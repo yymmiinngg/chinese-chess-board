@@ -2,6 +2,4 @@
 build/
 DerivedData/
 xcuserdata/
-*.moved-aside
-*.xcuserstate
-
+project.xcworkspace/
