@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 
 class ChessBoard : UIView{
 	
@@ -33,7 +34,8 @@ class ChessBoard : UIView{
 	
 	fileprivate var inited: Bool = false
 	
-	
+	var session = AVAudioSession.sharedInstance()
+	var audioPlayer: AVAudioPlayer!
 	
 	/// 初始化方法，在棋盘需要初始化的时候调用：将所有棋子归位，并抹去所有提示信息
 	/// - parameter none
@@ -59,6 +61,14 @@ class ChessBoard : UIView{
 			// str.draw(at: CGPoint(x: p.Point.x + 10, y: p.Point.y + 10), withAttributes: nil);
 			p.doInit()
 			self.addSubview(p)
+		}
+		
+		// 音频初始化
+		do{
+			try session.setActive(true)
+			try session.setCategory(AVAudioSession.Category.playback)
+		} catch{
+			print(error)
 		}
 		
 		inited = true
@@ -192,6 +202,7 @@ class ChessBoard : UIView{
 				showEndingTag(winner)
 				_hasShowEnding = true;
 			}
+			playAlarmVoiceAction(sound:"done1")
 		} else if(_hasShowEnding){
 			clearEndingTag()
 			_hasShowEnding = false
@@ -223,6 +234,13 @@ class ChessBoard : UIView{
 		// 如果目的点存在棋子则移除
 		if toPoint.BindChessView != nil {
 			toPoint.BindChessView!.removeFromSuperview()
+			if (!isFromBack){
+				playAlarmVoiceAction(sound:"hit4")
+			}
+		}else{
+			if (!isFromBack){
+				playAlarmVoiceAction(sound:"hit3")
+			}
 		}
 		
 		// 将起始点棋子移动到目的点
@@ -252,6 +270,20 @@ class ChessBoard : UIView{
 					}
 				}
 			}
+		}
+	}
+	
+	func playAlarmVoiceAction(sound: String) {
+		do{
+			let path = Bundle.main.path(forResource: sound, ofType: "mp3")
+			let soudUrl = URL(fileURLWithPath: path!)
+			try audioPlayer = AVAudioPlayer(contentsOf: soudUrl, fileTypeHint: AVFileType.mp3.rawValue)
+			audioPlayer.prepareToPlay()
+			audioPlayer.volume = 1
+			audioPlayer.numberOfLoops = 0
+			audioPlayer.play()
+		} catch{
+			print(error)
 		}
 	}
 	

@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 
 class ChessPoint: UIView {
 	
@@ -29,24 +30,23 @@ class ChessPoint: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+	
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		if chessLogic.isEnded {
-			board.showPointFocus(self, stable: false)
+			// board.showPointFocus(self, stable: false)
 		} else if board.pickedChessPoint != nil {
 			board.showPointFocus(self, stable: false)
 		}
-    }
+	}
 	
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-
     }
 	
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		
 		// 是否已经结束战局
 		if chessLogic.isEnded {
-			board.showPointFocus(self, stable: false)
+			// board.showPointFocus(self, stable: false)
             return
         }
 

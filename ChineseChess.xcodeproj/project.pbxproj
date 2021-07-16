@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D1366AA26A1AD0200EA2E44 /* hit1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D1366A826A1AD0200EA2E44 /* hit1.mp3 */; };
+		3D1366AB26A1AD0200EA2E44 /* hit2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D1366A926A1AD0200EA2E44 /* hit2.mp3 */; };
+		3D1366AD26A1B04900EA2E44 /* hit3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D1366AC26A1B04900EA2E44 /* hit3.mp3 */; };
+		3D1366B026A1B06500EA2E44 /* done1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D1366AE26A1B06500EA2E44 /* done1.mp3 */; };
+		3D1366B126A1B06500EA2E44 /* hit4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D1366AF26A1B06500EA2E44 /* hit4.mp3 */; };
 		3D2F8CD01D66CBC600B2E734 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F8CCF1D66CBC600B2E734 /* AppDelegate.swift */; };
 		3D2F8CD21D66CBC600B2E734 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F8CD11D66CBC600B2E734 /* ViewController.swift */; };
 		3D2F8CD51D66CBC600B2E734 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F8CD31D66CBC600B2E734 /* Main.storyboard */; };
@@ -24,6 +29,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3D1366A826A1AD0200EA2E44 /* hit1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = hit1.mp3; path = "../../../../../Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/hit1.mp3"; sourceTree = "<group>"; };
+		3D1366A926A1AD0200EA2E44 /* hit2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hit2.mp3; sourceTree = "<group>"; };
+		3D1366AC26A1B04900EA2E44 /* hit3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hit3.mp3; sourceTree = "<group>"; };
+		3D1366AE26A1B06500EA2E44 /* done1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = done1.mp3; sourceTree = "<group>"; };
+		3D1366AF26A1B06500EA2E44 /* hit4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hit4.mp3; sourceTree = "<group>"; };
 		3D2F8CCC1D66CBC600B2E734 /* ChineseChess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChineseChess.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D2F8CCF1D66CBC600B2E734 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D2F8CD11D66CBC600B2E734 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -104,6 +114,11 @@
 		3DCFD9041D6C4FD30050217B /* resource */ = {
 			isa = PBXGroup;
 			children = (
+				3D1366AE26A1B06500EA2E44 /* done1.mp3 */,
+				3D1366AF26A1B06500EA2E44 /* hit4.mp3 */,
+				3D1366AC26A1B04900EA2E44 /* hit3.mp3 */,
+				3D1366A826A1AD0200EA2E44 /* hit1.mp3 */,
+				3D1366A926A1AD0200EA2E44 /* hit2.mp3 */,
 			);
 			name = resource;
 			sourceTree = "<group>";
@@ -168,9 +183,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D1366B026A1B06500EA2E44 /* done1.mp3 in Resources */,
+				3D1366AA26A1AD0200EA2E44 /* hit1.mp3 in Resources */,
+				3D1366AB26A1AD0200EA2E44 /* hit2.mp3 in Resources */,
+				3D1366AD26A1B04900EA2E44 /* hit3.mp3 in Resources */,
 				3D2F8CDA1D66CBC600B2E734 /* LaunchScreen.storyboard in Resources */,
 				3D2F8CD71D66CBC600B2E734 /* Assets.xcassets in Resources */,
 				3D2F8CD51D66CBC600B2E734 /* Main.storyboard in Resources */,
+				3D1366B126A1B06500EA2E44 /* hit4.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +270,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -306,6 +327,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -316,6 +338,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				TARGETED_DEVICE_FAMILY = 2;
