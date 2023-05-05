@@ -110,22 +110,22 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 		case UISwipeGestureRecognizer.Direction.left:
 			if sender.numberOfTouches == 1 {
 				if let chessStep = chessLogic.backward() {
-					board.doBackwardChessStep(chessStep)
+					board.doBackwardChessStep(chessStep, true)
 				}
 			} else if sender.numberOfTouches == 2 {
 				while let chessStep = chessLogic.backward() {
-					board.doBackwardChessStep(chessStep)
+					board.doBackwardChessStep(chessStep, false)
 				}
 			}
 			board.afterMoveChessView()
 		case UISwipeGestureRecognizer.Direction.right:
 			if sender.numberOfTouches == 1 {
 				if let chessStep = chessLogic.forward() {
-					board.doForwardChessStep(chessStep)
+					board.doForwardChessStep(chessStep, true)
 				}
 			} else if sender.numberOfTouches == 2 {
 				while let chessStep = chessLogic.forward() {
-					board.doForwardChessStep(chessStep)
+					board.doForwardChessStep(chessStep, false)
 				}
 			}
 			board.afterMoveChessView()

@@ -174,10 +174,10 @@ class ChessBoard : UIView{
 	/// 在历史步骤中后退一步棋
 	/// - parameter step 步骤信息
 	/// - returns: void
-	func doBackwardChessStep(_ step: ChessStep){
+	func doBackwardChessStep(_ step: ChessStep, _ animate:Bool){
 		let srcPoint = _points[step.to]
 		let toPoint = _points[step.src]
-		moveChessView(srcPoint, to: toPoint, moveMessage:step.moveMessage, isFromBack:true)
+		moveChessView(srcPoint, to: toPoint, moveMessage:step.moveMessage, fromBack: true, animate:animate)
 		if let chess = step.toChess {
 			self.addChess(chess, to: _points[step.to])
 		}
@@ -186,10 +186,10 @@ class ChessBoard : UIView{
 	/// 在历史步骤中前进一步棋
 	/// - parameter step 步骤信息
 	/// - returns: void
-	func doForwardChessStep(_ step: ChessStep){
+	func doForwardChessStep(_ step: ChessStep, _ animate:Bool){
 		let srcPoint = _points[step.src]
 		let toPoint = _points[step.to]
-		moveChessView(srcPoint, to: toPoint, moveMessage:step.moveMessage, isFromBack:false)
+		moveChessView(srcPoint, to: toPoint, moveMessage:step.moveMessage, fromBack: false, animate:animate)
 	}
 	
 	/// 移动棋子之后的一个动作，显示是否已经胜利，显示是否面临将军，将棋点移到棋子上方（确保能被点击到）
@@ -230,31 +230,32 @@ class ChessBoard : UIView{
 	/// - parameter moveMesssage 移动发生的消息
 	/// - parameter srcPoint 是否来源于后退操作
 	/// - returns: void
-	func moveChessView(_ srcPoint:ChessPoint, to toPoint:ChessPoint, moveMessage: MoveMessage, isFromBack: Bool){
+	func moveChessView(_ srcPoint:ChessPoint, to toPoint:ChessPoint, moveMessage: MoveMessage, fromBack:Bool, animate: Bool){
 		// 如果目的点存在棋子则移除
-		if toPoint.BindChessView != nil {
+		let hasKill = toPoint.BindChessView != nil
+		if hasKill {
 			toPoint.BindChessView!.removeFromSuperview()
-			if (!isFromBack){
-				playAlarmVoiceAction(sound:"hit4")
-			}
-		}else{
-			if (!isFromBack){
-				playAlarmVoiceAction(sound:"hit3")
-			}
 		}
 		
 		// 将起始点棋子移动到目的点
 		toPoint.BindChessView = srcPoint.BindChessView
-		UIView.animate(withDuration: 0.15, animations: { () -> Void in
+		if (animate){
+			UIView.animate(withDuration: 0.1, animations: { () -> Void in
+				toPoint.BindChessView!.drawView(toPoint.Point, width: board._pointWidth!)
+				if (animate) { self.playHitSound(hasKill) }
+			})
+		}else{
 			toPoint.BindChessView!.drawView(toPoint.Point, width: board._pointWidth!)
-		})
+			if (animate) { playHitSound(hasKill) }
+		}
+		
 		srcPoint.BindChessView = nil
 		
 		// 处理杀棋列表
 		if case let MoveMessage.success(killedChess) = moveMessage {
 			if let kc = killedChess {
 				 // 回退操作将棋子从杀棋列表移除
-				if(isFromBack) {
+				if(fromBack) {
 					if kc.color {
 						redKilledPanel.remove()
 					}else{
@@ -270,6 +271,14 @@ class ChessBoard : UIView{
 					}
 				}
 			}
+		}
+	}
+	
+	func playHitSound(_ hasKill:Bool) {
+		if hasKill {
+			playAlarmVoiceAction(sound:"hit4")
+		}else{
+			playAlarmVoiceAction(sound:"hit3")
 		}
 	}
 	
