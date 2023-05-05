@@ -202,7 +202,6 @@ class ChessBoard : UIView{
 				showEndingTag(winner)
 				_hasShowEnding = true;
 			}
-			playAlarmVoiceAction(sound:"done1")
 		} else if(_hasShowEnding){
 			clearEndingTag()
 			_hasShowEnding = false
@@ -241,10 +240,28 @@ class ChessBoard : UIView{
 		toPoint.BindChessView = srcPoint.BindChessView
 		UIView.animate(withDuration: animateTime, animations: { () -> Void in
 			toPoint.BindChessView!.drawView(toPoint.Point, width: board._pointWidth!)
-			if playSound {self.playHitSound(hasKill)}
-		})
-		
+		}, completion: { (done:Bool) -> Void in
+			
+		} )
+		// 清走原位的棋子
 		srcPoint.BindChessView = nil
+		
+		// 延时播放声音(动画)
+		if chessLogic.isEnded {
+			DispatchQueue.main.asyncAfter(deadline: .now() + animateTime - 0.1) {
+				self.playAlarmVoiceAction(sound:"hit4")
+			}
+		} else if playSound {
+			if hasKill {
+				DispatchQueue.main.asyncAfter(deadline: .now() + animateTime - 0.1) {
+					self.playAlarmVoiceAction(sound:"hit2")
+				}
+			}else{
+				DispatchQueue.main.asyncAfter(deadline: .now() + animateTime - 0.15) {
+					self.playAlarmVoiceAction(sound:"hit3")
+				}
+			}
+		}
 		
 		// 处理杀棋列表
 		if case let MoveMessage.success(killedChess) = moveMessage {
@@ -268,15 +285,7 @@ class ChessBoard : UIView{
 			}
 		}
 	}
-	
-	func playHitSound(_ hasKill:Bool) {
-		if hasKill {
-			playAlarmVoiceAction(sound:"hit4")
-		}else{
-			playAlarmVoiceAction(sound:"hit3")
-		}
-	}
-	
+	 
 	func playAlarmVoiceAction(sound: String) {
 		do{
 			let path = Bundle.main.path(forResource: sound, ofType: "mp3")
@@ -285,28 +294,11 @@ class ChessBoard : UIView{
 			audioPlayer.prepareToPlay()
 			audioPlayer.volume = 1
 			audioPlayer.play()
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-				self.fadeOutVolume(self.audioPlayer)
-			}
 		} catch{
 			print(error)
 		}
 	}
-	
-	// 渐出音量
-	func fadeOutVolume(_ player:AVAudioPlayer) {
-		if player.volume == 0.0 {
-			player.stop()
-			return
-		}
-		// 每次降低 0.1
-		player.volume -= 0.5
-		// 延迟 0.1 秒再次调用自身
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-			self.fadeOutVolume(player)
-		}
-	}
-	
+ 
 	/// 显示结局消息
 	/// - parameter winnerColor 胜出者颜色
 	/// - returns: void
