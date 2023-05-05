@@ -101,8 +101,34 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 		blackKilledPanel.addGestureRecognizer(blackSwipeLeftGesture)
 	}
 	
+	var timer: Timer?
+	
+	@objc func timerTriggeredBackward() {
+		  if let chessStep = chessLogic.backward() {
+			  board.doBackwardChessStep(chessStep, false, 0.05)
+		  }else{
+			  board.afterMoveChessView()
+			  timer!.invalidate()
+			  timer = nil
+		  }
+	}
+	
+	@objc func timerTriggeredForward() {
+		  if let chessStep = chessLogic.forward() {
+			  board.doForwardChessStep(chessStep, false, 0.05)
+		  }else{
+			  board.afterMoveChessView()
+			  timer!.invalidate()
+			  timer = nil
+		  }
+	}
+	
 	/// 划动手势
 	@objc func handleSwipeGesture(_ sender: UISwipeGestureRecognizer){
+		// 正在播放走棋，不能操作
+		if timer != nil {
+			return
+		}
 		//划动的方向
 		let direction = sender.direction
 		//判断是上下左右
@@ -110,27 +136,25 @@ class ViewController: UIViewController , UIActionSheetDelegate{
 		case UISwipeGestureRecognizer.Direction.left:
 			if sender.numberOfTouches == 1 {
 				if let chessStep = chessLogic.backward() {
-					board.doBackwardChessStep(chessStep, true)
+					board.doBackwardChessStep(chessStep, true, 0.15)
+					board.afterMoveChessView()
 				}
 			} else if sender.numberOfTouches == 2 {
-				while let chessStep = chessLogic.backward() {
-					board.doBackwardChessStep(chessStep, false)
-				}
+				timer = Timer.scheduledTimer(timeInterval: 0.03, target: self, selector: #selector(timerTriggeredBackward), userInfo: nil, repeats: true)
 			}
-			board.afterMoveChessView()
+			break
 		case UISwipeGestureRecognizer.Direction.right:
 			if sender.numberOfTouches == 1 {
 				if let chessStep = chessLogic.forward() {
-					board.doForwardChessStep(chessStep, true)
+					board.doForwardChessStep(chessStep, true, 0.15)
+					board.afterMoveChessView()
 				}
 			} else if sender.numberOfTouches == 2 {
-				while let chessStep = chessLogic.forward() {
-					board.doForwardChessStep(chessStep, false)
-				}
+				timer = Timer.scheduledTimer(timeInterval: 0.03, target: self, selector: #selector(timerTriggeredForward), userInfo: nil, repeats: true)
 			}
-			board.afterMoveChessView()
+			break
 		default:
-			break;
+			break
 		}
 	}
 	

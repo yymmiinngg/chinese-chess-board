@@ -174,10 +174,10 @@ class ChessBoard : UIView{
 	/// 在历史步骤中后退一步棋
 	/// - parameter step 步骤信息
 	/// - returns: void
-	func doBackwardChessStep(_ step: ChessStep, _ animate:Bool){
+	func doBackwardChessStep(_ step: ChessStep, _ playSound:Bool, _ animateTime:TimeInterval){
 		let srcPoint = _points[step.to]
 		let toPoint = _points[step.src]
-		moveChessView(srcPoint, to: toPoint, moveMessage:step.moveMessage, fromBack: true, animate:animate)
+		moveChessView(srcPoint, to: toPoint, moveMessage:step.moveMessage, fromBack: true, playSound:playSound, animateTime:animateTime)
 		if let chess = step.toChess {
 			self.addChess(chess, to: _points[step.to])
 		}
@@ -186,10 +186,10 @@ class ChessBoard : UIView{
 	/// 在历史步骤中前进一步棋
 	/// - parameter step 步骤信息
 	/// - returns: void
-	func doForwardChessStep(_ step: ChessStep, _ animate:Bool){
+	func doForwardChessStep(_ step: ChessStep, _ playSound:Bool, _ animateTime:TimeInterval){
 		let srcPoint = _points[step.src]
 		let toPoint = _points[step.to]
-		moveChessView(srcPoint, to: toPoint, moveMessage:step.moveMessage, fromBack: false, animate:animate)
+		moveChessView(srcPoint, to: toPoint, moveMessage:step.moveMessage, fromBack: false, playSound:playSound, animateTime:animateTime)
 	}
 	
 	/// 移动棋子之后的一个动作，显示是否已经胜利，显示是否面临将军，将棋点移到棋子上方（确保能被点击到）
@@ -230,7 +230,7 @@ class ChessBoard : UIView{
 	/// - parameter moveMesssage 移动发生的消息
 	/// - parameter srcPoint 是否来源于后退操作
 	/// - returns: void
-	func moveChessView(_ srcPoint:ChessPoint, to toPoint:ChessPoint, moveMessage: MoveMessage, fromBack:Bool, animate: Bool){
+	func moveChessView(_ srcPoint:ChessPoint, to toPoint:ChessPoint, moveMessage: MoveMessage, fromBack:Bool, playSound: Bool, animateTime:TimeInterval){
 		// 如果目的点存在棋子则移除
 		let hasKill = toPoint.BindChessView != nil
 		if hasKill {
@@ -239,15 +239,10 @@ class ChessBoard : UIView{
 		
 		// 将起始点棋子移动到目的点
 		toPoint.BindChessView = srcPoint.BindChessView
-		if (animate){
-			UIView.animate(withDuration: 0.1, animations: { () -> Void in
-				toPoint.BindChessView!.drawView(toPoint.Point, width: board._pointWidth!)
-				if (animate) { self.playHitSound(hasKill) }
-			})
-		}else{
+		UIView.animate(withDuration: animateTime, animations: { () -> Void in
 			toPoint.BindChessView!.drawView(toPoint.Point, width: board._pointWidth!)
-			if (animate) { playHitSound(hasKill) }
-		}
+			if playSound {self.playHitSound(hasKill)}
+		})
 		
 		srcPoint.BindChessView = nil
 		
@@ -289,10 +284,26 @@ class ChessBoard : UIView{
 			try audioPlayer = AVAudioPlayer(contentsOf: soudUrl, fileTypeHint: AVFileType.mp3.rawValue)
 			audioPlayer.prepareToPlay()
 			audioPlayer.volume = 1
-			audioPlayer.numberOfLoops = 0
 			audioPlayer.play()
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+				self.fadeOutVolume(self.audioPlayer)
+			}
 		} catch{
 			print(error)
+		}
+	}
+	
+	// 渐出音量
+	func fadeOutVolume(_ player:AVAudioPlayer) {
+		if player.volume == 0.0 {
+			player.stop()
+			return
+		}
+		// 每次降低 0.1
+		player.volume -= 0.5
+		// 延迟 0.1 秒再次调用自身
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+			self.fadeOutVolume(player)
 		}
 	}
 	

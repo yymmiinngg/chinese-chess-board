@@ -76,7 +76,7 @@ class ChessPoint: UIView {
 					board.showChessAwkward(srcPoint)
 				} else {
 					// 实际移动棋子
-					board.moveChessView(srcPoint, to: toPoint, moveMessage: result, fromBack: false, animate: true)
+					board.moveChessView(srcPoint, to: toPoint, moveMessage: result, fromBack: false, playSound:true, animateTime: 0.15)
 					board.afterMoveChessView()
 				}
 				// 移除拾起棋子的点
